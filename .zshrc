@@ -24,6 +24,13 @@ alias -g CL='| pygmentize | less'
 alias -g G='| grep'
 
 alias m='make'
+alias mt='make train'
+alias me='make eval'
+alias mtb='make tensorboard'
+alias ms='make serve'
+
+alias ta='tmux a'
+alias tad='tmux a -d'
 
 alias sv='sudo vim'
 alias vi='vim'
