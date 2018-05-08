@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+# Edit last screenshot with mypaint and save it to another file while being copied to clipboard
+
+BASE_DIR="$HOME/screenshots"
+get_last_screeshot() {
+    echo "$BASE_DIR/$(ls -t "$BASE_DIR" | grep -v edit | head -n 1)"
+}
+
+
+fpath="$(get_last_screeshot)"
+out_path="${fpath}.edit.$(date +"%F-%H-%M-%S").png"
+
+echo $fpath
+cp "$fpath" "$out_path"
+mypaint "$out_path"
+
+xclip -selection clipboard -t image/png -i "$out_path"
