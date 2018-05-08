@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+BASE_DIR=$HOME/screenshots
+mkdir -p "$BASE_DIR"
+save_path="$BASE_DIR/$(date +"%F-%H-%M-%S").png"
+
+deepin-screenshot -n -s "$save_path"
+xclip -selection clipboard -t image/png -i "$save_path"
