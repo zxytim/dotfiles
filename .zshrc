@@ -24,6 +24,7 @@ alias -g CL='| pygmentize | less'
 alias -g G='| grep'
 
 alias m='make'
+alias mc='make clean'
 alias mt='make train'
 alias me='make eval'
 alias mtb='make tensorboard'
