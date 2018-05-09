@@ -44,3 +44,6 @@ pip install --user neovim jedi
 git add -f some_file
 ```
 
+
+# TODOs
++ Add some screenshots
