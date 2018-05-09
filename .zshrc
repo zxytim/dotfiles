@@ -68,7 +68,7 @@ bindkey '^D' beginning-of-line  # ctrl-d
 
 
 # Developement Settings {
-export PATH=$HOME/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:$PATH
 [ -f $HOME/.zsh/paths.zsh ] && source $HOME/.zsh/paths.zsh 
 # }
 
@@ -103,3 +103,5 @@ fi
 
 safe_source ~/.fzf.zsh 
 safe_source ~/.zsh_local
+
+export MAKEFLAGS='-j4'
