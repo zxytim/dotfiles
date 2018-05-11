@@ -106,3 +106,5 @@ safe_source ~/.fzf.zsh
 safe_source ~/.zsh_local
 
 export MAKEFLAGS='-j4'
+export VISUAL='vim'
+export EDITOR='vim'
