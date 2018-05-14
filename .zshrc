@@ -27,6 +27,7 @@ alias m='make'
 alias mc='make clean'
 alias mt='make train'
 alias me='make eval'
+alias mi='make info'
 alias mtb='make tensorboard'
 alias ms='make serve'
 

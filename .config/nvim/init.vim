@@ -69,7 +69,7 @@ nmap <F8> :TagbarToggle<CR>
 
 " Nerdtree to navigate among directories
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-nmap nt :NERDTreeToggle<cr>
+nmap <leader>nt :NERDTreeToggle<cr>
 let NERDTreeShowBookmarks=0
 let NERDTreeMouseMode=2
 
