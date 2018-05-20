@@ -168,3 +168,9 @@ nmap ; :
 
 " highlight search results
 set hlsearch
+
+if has('persistent_undo')      "check if your vim version supports it
+  set undofile                 "turn on the feature  
+  call mkdir($HOME . '/.vim/undo', 'p')
+  set undodir=$HOME/.vim/undo  "directory where the undo files will be stored
+endif

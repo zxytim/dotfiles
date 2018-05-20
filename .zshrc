@@ -71,7 +71,7 @@ bindkey '^D' beginning-of-line  # ctrl-d
 
 # Developement Settings {
 export PATH=$HOME/bin:$HOME/.local/bin:$PATH
-[ -f $HOME/.zsh/paths.zsh ] && source $HOME/.zsh/paths.zsh 
+safe_source $HOME/.zsh/paths.zsh 
 # }
 
 
@@ -102,10 +102,38 @@ if [ $OS_DISTRIBUTION = 'arch' ]; then
 fi
 
 # }
+#
 
-safe_source ~/.fzf.zsh 
-safe_source ~/.zsh_local
+
+# npm packages
+export PATH=$HOME/.local/npm/bin:$PATH
 
 export MAKEFLAGS='-j4'
 export VISUAL='vim'
 export EDITOR='vim'
+
+
+# set tmux pane title to current directory name
+# supported only for tmux version >= 2.3
+TMUX_VERSION=$(tmux -V | cut -d ' ' -f 2)
+if version_compare_greater_equal "$TMUX_VERSION" 2.3; then
+    function set_tmux_title () {
+	printf '\033]2;'"$1"'\033\\'
+    }
+     
+    function auto_tmux_title() {
+	emulate -L zsh
+	printf '\033]2;'"${PWD:t}"'\033\\'
+    }
+     
+    auto_tmux_title
+    chpwd_functions=(${chpwd_functions[@]} "auto_tmux_title")
+fi
+
+
+safe_source ~/.fzf.zsh 
+
+
+# execute ~/.zsh_local at the end
+safe_source ~/.zsh_local
+
