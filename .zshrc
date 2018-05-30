@@ -19,7 +19,7 @@ antigen apply
 
 # aliases {
 alias -g L='| less'
-alias -g JL='| jq | less'
+alias -g JL='| jq . | less'
 alias -g CL='| pygmentize | less'
 alias -g G='| grep'
 
