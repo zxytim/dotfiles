@@ -2,9 +2,9 @@
 
 # Edit last screenshot with mypaint and save it to another file while being copied to clipboard
 
-BASE_DIR="$HOME/screenshots"
+BASE_DIR="$HOME/Desktop"
 get_last_screeshot() {
-    echo "$BASE_DIR/$(ls -t "$BASE_DIR" | grep -v edit | head -n 1)"
+    echo "$BASE_DIR/$(ls -t "$BASE_DIR" | grep -v edit | grep DeepinScreenshot | head -n 1)"
 }
 
 

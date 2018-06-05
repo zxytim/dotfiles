@@ -1,8 +1,12 @@
 #!/bin/bash -e
+set -x
 
-BASE_DIR=$HOME/screenshots
+BASE_DIR="$HOME/Desktop"
 mkdir -p "$BASE_DIR"
-save_path="$BASE_DIR/$(date +"%F-%H-%M-%S").png"
 
-deepin-screenshot -n -s "$save_path"
-xclip -selection clipboard -t image/png -i "$save_path"
+get_last_screeshot() {
+    echo "$BASE_DIR/$(ls -t "$BASE_DIR" | grep -v edit | grep DeepinScreenshot | head -n 1)"
+}
+
+deepin-screenshot -n 
+xclip -selection clipboard -t image/png -i "$(get_last_screeshot)"
