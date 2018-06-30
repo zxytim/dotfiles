@@ -94,6 +94,18 @@ Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 
+
+" deopletec
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+Plug 'zchee/deoplete-jedi'  " deoplete comes with better python completion than YCM
+
  
 " fzf  for fuzzy search {
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
