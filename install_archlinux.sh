@@ -14,7 +14,7 @@ $PACMAN_INSTALL \
 	base-devel \
 	wget \
 	lxdm zsh tmux \
-	xmonad xmonad-contrib xmonad-utils xmobar \
+	xmonad xmonad-contrib xmonad-utils xmobar dmenu \
 	neovim python-pip python-jedi python-neovim \
 	xclip xsel grub efibootmgr os-prober \
 	jq clang \
@@ -22,19 +22,24 @@ $PACMAN_INSTALL \
 	acpi linux-lts linux-lts-headers openssh rsync \
 	git tig the_silver_searcher \
 	fcitx fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 \
-	fcitx-rime fcitx-table-extra fcitx-table-other \
+	fcitx-rime fcitx-table-extra fcitx-table-other fcitx-sunpinyin \
 	xscreensaver redshift notification-daemon \
 	xorg xorg-drivers \
 	sakura firefox chromium \
 	alsa-firmware alsa-lib alsa-oss alsaplayer alsa-plugins alsa-tools alsa-utils \
 	networkmanager \
 	autossh \
+	mypaint gimp vlc mpv mplayer \
+	geeqie thunar feh \
+
 
 sudo systemctl enable NetworkManager
 sudo systemctl start NetworkManager
 
 $YAOURT_INSTALL \
-	google-chrome
+	google-chrome deepin-screenshot 
+
+# fcitx-sogoupinyin
 
 
 # basic fonts
@@ -107,3 +112,6 @@ echo "1. Setting up fcitx: add following environment variables to /etc/profile"
 echo "   export GTK_IM_MODULE=fcitx"
 echo "   export QT_IM_MODULE=fcitx"
 echo "   export XMODIFIERS=@im=fcitx"
+echo "2. Configure input method"
+echo "   fcitx-configtool"
+
