@@ -86,7 +86,10 @@ function! BuildYCM(info)
   " - status: 'installed', 'updated', or 'unchanged'
   " - force:  set on PlugInstall! or PlugUpdate!
   if a:info.status == 'installed' || a:info.force
-    !./install.py --clang-completer
+    !git submodule update --init --recursive 
+    " There's issue regarding libtinfo-5 on archlinux; therefore we choose to
+    " use system clang 
+    ! [ $(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }') = arch ] && ./install.py --clang-completer --system-clang || /install.py --clang-completer
   endif
 endfunction
  
