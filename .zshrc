@@ -1,3 +1,7 @@
+# long history
+HISTSIZE=10000000
+SAVEHIST=10000000
+
 # some utilities
 source $HOME/.zsh/utils.zsh
 
@@ -133,6 +137,16 @@ fi
 
 safe_source ~/.fzf.zsh 
 
+gshow() {
+    git log --graph --color=always \
+	--format="%C(auto)%h%d %s %C(black)%C(bold)%cr %C(bold blue)<%an>%Creset" "$@" |
+	fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+	--bind "ctrl-m:execute:
+    (grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF' 
+    {} 
+    FZF-EOF" \
+	--preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1; }; f {}'
+}
 
 # execute ~/.zsh_local at the end
 safe_source ~/.zsh_local
