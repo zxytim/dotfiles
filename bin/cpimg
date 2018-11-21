@@ -1,0 +1,2 @@
+#!/bin/bash -e
+xclip -sel clip -t image/png 
