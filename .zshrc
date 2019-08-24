@@ -2,6 +2,8 @@
 HISTSIZE=10000000
 SAVEHIST=10000000
 
+fpath+=~/.zfunc
+
 # some utilities
 source $HOME/.zsh/utils.zsh
 
@@ -63,6 +65,8 @@ if [ $OS_DISTRIBUTION = 'arch' ]; then
 	alias pSs='sudo pacman -Ss'
 fi
 
+alias iotop='sudo iotop'
+
 # }
 
 # key bindings {
@@ -71,6 +75,16 @@ fi
 # used in tmux. 
 bindkey '^D' beginning-of-line  # ctrl-d 
 
+expand-aliases() {
+    unset 'functions[_expand-aliases]'
+    functions[_expand-aliases]=$BUFFER
+    (($+functions[_expand-aliases])) &&
+	BUFFER=${functions[_expand-aliases]#$'\t'} &&
+	CURSOR=$#BUFFER
+}
+
+zle -N expand-aliases
+bindkey '\e^E' expand-aliases  # ctrl-alt-e
 # }
 
 
@@ -148,6 +162,10 @@ gshow() {
     FZF-EOF" \
 	--preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1; }; f {}'
 }
+
+
+# peotry dependency manager for python
+export PATH="$HOME/.poetry/bin:$PATH"
 
 # execute ~/.zsh_local at the end
 safe_source ~/.zsh_local
