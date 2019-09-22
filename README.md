@@ -27,7 +27,7 @@ sudo update-alternatives --config editor
 ### Ubuntu
 ```
 sudo apt update
-sudo apt install python-dev python3-dev python-pip python3-pip net-stat jq silversearcher-ag tig
+sudo apt install python-dev python3-dev python-pip python3-pip jq silversearcher-ag tig
 pip3 install --user neovim jedi
 pip install --user neovim jedi
 ```
