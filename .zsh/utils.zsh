@@ -1,6 +1,10 @@
 
 get_os_distribution() {
-	awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }'
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		echo osx
+	else
+		awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }'
+	fi
 }
 
 OS_DISTRIBUTION=$(get_os_distribution)

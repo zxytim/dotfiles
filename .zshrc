@@ -16,7 +16,7 @@ antigen bundle olivierverdier/zsh-git-prompt
 antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen bundle autojump
-[ $OS_DISTRIBUTION = 'ubuntu' ] && source /usr/share/autojump/autojump.sh
+[[ $OS_DISTRIBUTION == 'ubuntu' ]] && source /usr/share/autojump/autojump.sh
 
 antigen theme zxytim/dotfiles .zsh/themes/tim
 
@@ -57,7 +57,7 @@ alias c3='~/anaconda3/bin/conda'
 alias set_proxy='source ~/bin/default_proxy.source'
 alias unset_proxy='unset http_proxy https_proxy'
 
-if [ $OS_DISTRIBUTION = 'arch' ]; then
+if [[ $OS_DISTRIBUTION == 'arch' ]]; then
 	alias yS='yaourt -S --noconfirm --needed'
 	alias ySs='yaourt -Ss'
 	alias pS='sudo pacman -S --noconfirm --needed'
@@ -111,7 +111,7 @@ conf() {
 #
 # On Ubuntu, dbus will start ssh-agent
 
-if [ $OS_DISTRIBUTION = 'arch' ]; then
+if [[ $OS_DISTRIBUTION == 'arch' ]]; then
 	if ! pgrep -u $USER ssh-agent > /dev/null; then
 	    [ -d ~/.config ] || mkdir -v ~/.config
 	    ssh-agent > ~/.config/ssh-agent-thing
