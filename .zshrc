@@ -12,7 +12,10 @@ source $HOME/.zsh/antigen.zsh
 antigen use oh-my-zsh
 
 antigen bundle git
-antigen bundle olivierverdier/zsh-git-prompt
+
+# This is quite slow ...
+# antigen bundle olivierverdier/zsh-git-prompt
+
 antigen bundle zsh-users/zsh-syntax-highlighting
 
 antigen bundle autojump

@@ -89,6 +89,7 @@ function! BuildYCM(info)
     !git submodule update --init --recursive 
     " There's issue regarding libtinfo-5 on archlinux; therefore we choose to
     " use system clang 
+    " XXX: This does not work for MacOS
     ! [ $(awk '/^ID=/' /etc/*-release | awk -F'=' '{ print tolower($2) }') = arch ] && ./install.py --clang-completer --system-clang || /install.py --clang-completer
   endif
 endfunction
