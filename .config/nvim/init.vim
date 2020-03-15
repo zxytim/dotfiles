@@ -190,3 +190,8 @@ if has('persistent_undo')      "check if your vim version supports it
   call mkdir($HOME . '/.vim/undo', 'p')
   set undodir=$HOME/.vim/undo  "directory where the undo files will be stored
 endif
+
+" capital 'Z' for dictionary look up of word under cursor
+if executable('ydcv')
+    map Z :!ydcv <cword><CR>
+endif
