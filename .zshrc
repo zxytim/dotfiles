@@ -93,6 +93,12 @@ bindkey '\e^E' expand-aliases  # ctrl-alt-e
 
 # Developement Settings {
 export PATH=$HOME/bin:$HOME/.local/bin:$PATH
+
+if [[ "$OS_DISTRIBUTION" == osx ]]; then
+    # Python binaries installed by homebrew
+    export PATH=$HOME/Library/Python/3.7/bin:$PATH
+fi
+
 safe_source $HOME/.zsh/paths.zsh 
 # }
 
@@ -172,4 +178,7 @@ export PATH="$HOME/.poetry/bin:$PATH"
 
 # execute ~/.zsh_local at the end
 safe_source ~/.zsh_local
+
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
