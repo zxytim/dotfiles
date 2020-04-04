@@ -128,6 +128,9 @@ nnoremap <F5> :MundoToggle<CR>
 
 " show git diff 
 Plug 'airblade/vim-gitgutter'
+
+" nim-lang support
+Plug 'alaviss/nim.nvim'
  
 call plug#end()
 " }
