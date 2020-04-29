@@ -1,10 +1,9 @@
 #!/bin/bash
-export PYTHONPATH=
 
 for d in "$HOME/anaconda3" "$HOME/opt/anaconda3"; do
-    p="$d/bin/activate"
+    p="$d/bin/conda"
     if [[ -e "$p" ]]; then
-	source "$p"
+	"$p" $@
 	break
     fi
 done

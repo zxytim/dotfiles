@@ -18,8 +18,11 @@ antigen bundle git
 
 antigen bundle zsh-users/zsh-syntax-highlighting
 
+
+# autojump
 antigen bundle autojump
 [[ $OS_DISTRIBUTION == 'ubuntu' ]] && source /usr/share/autojump/autojump.sh
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh  # macos
 
 antigen theme zxytim/dotfiles .zsh/themes/tim
 
@@ -50,11 +53,12 @@ alias v=vim
 alias c='cat'
 
 alias ip3='ipython3'
+alias bp3='bpython'  # defaults to python 3
 
 alias rf='readlink -f'
 
 alias a3='source ~/bin/a3'
-alias c3='~/anaconda3/bin/conda'
+# alias c3='~/anaconda3/bin/conda'
 
 # http proxy
 alias set_proxy='source ~/bin/default_proxy.source'
