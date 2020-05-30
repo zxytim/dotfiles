@@ -12,6 +12,8 @@ source $HOME/.zsh/antigen.zsh
 antigen use oh-my-zsh
 
 antigen bundle git
+antigen bundle docker
+antigen bundle docker-compose
 
 # This is quite slow ...
 # antigen bundle olivierverdier/zsh-git-prompt
@@ -59,6 +61,10 @@ alias rf='readlink -f'
 
 alias a3='source ~/bin/a3'
 # alias c3='~/anaconda3/bin/conda'
+
+
+# 'p' for Python
+alias p='python3'
 
 # http proxy
 alias set_proxy='source ~/bin/default_proxy.source'
@@ -175,6 +181,14 @@ gshow() {
     FZF-EOF" \
 	--preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1; }; f {}'
 }
+
+function nohist() {
+    PREFIX+="(nohist) "
+    HISTFILE=/dev/null
+}
+
+alias nohist=' nohist'
+
 
 
 # peotry dependency manager for python

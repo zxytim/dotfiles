@@ -123,6 +123,10 @@ nnoremap <silent> <C-p> :Files<CR>
 " mundo for navigate in undo-tree {
 Plug 'simnalamburt/vim-mundo'
 nnoremap <F5> :MundoToggle<CR>
+
+" rust completion
+Plug 'rust-lang/rust.vim'
+
 " }
  
 
