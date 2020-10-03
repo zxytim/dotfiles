@@ -16,7 +16,7 @@ antigen bundle docker
 antigen bundle docker-compose
 
 # This is quite slow ...
-# antigen bundle olivierverdier/zsh-git-prompt
+antigen bundle olivierverdier/zsh-git-prompt
 
 antigen bundle zsh-users/zsh-syntax-highlighting
 
@@ -106,7 +106,7 @@ export PATH=$HOME/bin:$HOME/.local/bin:$PATH
 
 if [[ "$OS_DISTRIBUTION" == osx ]]; then
     # Python binaries installed by homebrew
-    export PATH=$HOME/Library/Python/3.7/bin:$PATH
+    export PATH=$HOME/Library/Python/3.8/bin:$PATH
 fi
 
 safe_source $HOME/.zsh/paths.zsh 
@@ -146,9 +146,14 @@ fi
 # npm packages
 export PATH=$HOME/.local/npm/bin:$PATH
 
-export MAKEFLAGS='-j4'
+# go packages
+export PATH="$HOME/go/bin:$PATH"
+
+
+export MAKEFLAGS='-j8'
 export VISUAL='vim'
 export EDITOR='vim'
+
 
 
 # set tmux pane title to current directory name
