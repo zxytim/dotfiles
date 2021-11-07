@@ -108,7 +108,7 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 let g:deoplete#enable_at_startup = 1
-Plug 'zchee/deoplete-jedi'  " deoplete comes with better python completion than YCM
+Plug 'deoplete-plugins/deoplete-jedi'  " deoplete comes with better python completion than YCM
 
  
 " fzf  for fuzzy search {
@@ -202,3 +202,10 @@ endif
 if executable('ydcv')
     map Z :!ydcv <cword><CR>
 endif
+
+set completeopt-=menu
+set completeopt+=menuone   " Show the completions UI even with only 1 item
+set completeopt-=longest   " Don't insert the longest common text
+set completeopt-=preview   " Hide the documentation preview window
+set completeopt+=noinsert  " Don't insert text automatically
+set completeopt-=noselect  " Highlight the first completion automatically
