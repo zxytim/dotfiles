@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for d in "$HOME/anaconda3" "$HOME/opt/anaconda3" "$HOME/opt/miniconda3"; do
+for d in "$HOME/anaconda3" "$HOME/miniconda3" "$HOME/opt/anaconda3" "$HOME/opt/miniconda3"; do
     p="$d/bin/conda"
     if [[ -e "$p" ]]; then
 	"$p" $@

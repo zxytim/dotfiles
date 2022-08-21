@@ -96,6 +96,11 @@ alias iotop='sudo iotop'
 alias noitermplot='MPLBACKEND=""'
 
 
+if cat /etc/os-release | grep "^ID=" | grep manjaro >/dev/null; then
+    alias yS='yay -S'
+    alias ySs='yay -Ss'
+fi
+
 # }
 
 # key bindings {
