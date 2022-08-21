@@ -10,6 +10,7 @@ HISTSIZE=10000000
 SAVEHIST=10000000
 
 fpath+=~/.zfunc
+# fpath+=~/software/conda-zsh-completion
 
 # some utilities
 source $HOME/.zsh/utils.zsh
@@ -26,6 +27,7 @@ antigen bundle docker-compose
 antigen bundle olivierverdier/zsh-git-prompt
 
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle esc/conda-zsh-completion
 
 
 # autojump
@@ -42,7 +44,7 @@ antigen apply
 
 # aliases {
 alias -g L='| less'
-alias -g JL='| jq . | less'
+alias -g JL='| jq . -C | less'
 alias -g CL='| pygmentize | less'
 alias -g G='| grep'
 
@@ -73,6 +75,9 @@ alias a3='source ~/bin/a3'
 
 # 'p' for Python
 alias p='python3'
+
+# 'pi' for `python3 -m pip install`
+alias pi='python3 -m pip install'
 
 # http proxy
 alias set_proxy='source ~/bin/default_proxy.source'
@@ -113,7 +118,7 @@ bindkey '\e^E' expand-aliases  # ctrl-alt-e
 
 
 # Developement Settings {
-export PATH=$HOME/bin:$HOME/.local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/opt/homebrew/bin:$PATH
 
 if [[ "$OS_DISTRIBUTION" == osx ]]; then
     # Python binaries installed by homebrew
