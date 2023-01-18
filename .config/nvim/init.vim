@@ -136,6 +136,9 @@ Plug 'airblade/vim-gitgutter'
 " nim-lang support
 Plug 'alaviss/nim.nvim'
  
+" Copilot
+Plug 'github/copilot.vim'
+
 call plug#end()
 " }
  
