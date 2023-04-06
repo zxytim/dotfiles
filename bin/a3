@@ -1,7 +1,7 @@
 #!/bin/bash
 export PYTHONPATH=
 
-for d in "$HOME/anaconda3" "$HOME/miniconda3" "$HOME/opt/anaconda3" "$HOME/opt/miniconda3"; do
+for d in "$HOME/anaconda3" "$HOME/miniconda3" "$HOME/opt/anaconda3" "$HOME/opt/miniconda3" "$HOME/miniforge3"; do
     p="$d/bin/activate"
     if [[ -e "$p" ]]; then
 	source "$p"
