@@ -3,10 +3,16 @@
 import argparse
 import subprocess
 import GPUtil
+import sys
+import atexit
 import os
+import signal
 import socket
 from loguru import logger
 from contextlib import closing
+import time
+
+from subprocess import PIPE
 
 def find_free_port():
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
@@ -24,8 +30,8 @@ def main():
 
     gpus = GPUtil.getAvailable(
         limit=args.gpus,
-        maxLoad=0.1,
-        maxMemory=0.1,
+        maxLoad=0.01,
+        maxMemory=0.01,
     )
 
     if len(gpus) != args.gpus:
@@ -45,7 +51,18 @@ def main():
     logger.warning(cmd)
     logger.warning(' '.join(cmd))
 
-    subprocess.run(cmd)
+    proc = subprocess.Popen(cmd)
+
+    try:
+        proc.communicate()
+    finally:
+        proc.terminate()
+        proc.kill()
+
+        pgid = os.getpgid(proc.pid)
+        logger.info(f"Killing child processes of pid={proc.pid} pgid={pgid} ...")
+        os.killpg(pgid, signal.SIGTERM)
+        sys.exit(proc.returncode)
 
 
 if __name__ == '__main__':
