@@ -30,8 +30,8 @@ def main():
 
     gpus = GPUtil.getAvailable(
         limit=args.gpus,
-        maxLoad=0.01,
-        maxMemory=0.01,
+        maxLoad=0.05,
+        maxMemory=0.05,
     )
 
     if len(gpus) != args.gpus:
