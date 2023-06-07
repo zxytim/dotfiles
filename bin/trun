@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+
+import argparse
+import subprocess
+import GPUtil
+import os
+import socket
+from loguru import logger
+from contextlib import closing
+
+def find_free_port():
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+        s.bind(('', 0))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        return s.getsockname()[1]
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Automatically call torchrun with given number of gpus')
+    parser.add_argument('gpus', type=int)
+    parser.add_argument('args', nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+
+    gpus = GPUtil.getAvailable(
+        limit=args.gpus,
+        maxLoad=0.1,
+        maxMemory=0.1,
+    )
+
+    if len(gpus) != args.gpus:
+        raise Exception(f"Not enough spare gpus available: {args.gpus} required, {gpus} found.")
+
+    logger.warning(f"gpus: {gpus}")
+    os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(map(str, gpus))
+
+    cmd = [
+        'torchrun',
+        '--standalone',
+        "--nproc_per_node", str(args.gpus),
+        '--rdzv-endpoint', str(find_free_port()),
+        *args.args
+    ]
+
+    logger.warning(cmd)
+    logger.warning(' '.join(cmd))
+
+    subprocess.run(cmd)
+
+
+if __name__ == '__main__':
+    main()
+
