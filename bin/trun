@@ -40,11 +40,17 @@ def main():
     logger.warning(f"gpus: {gpus}")
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(map(str, gpus))
 
+    port = find_free_port()
+    time.sleep(2)
+    
+    
+    logger.warning(f"port: {port}")
+
     cmd = [
         'torchrun',
-        '--standalone',
+        # '--standalone',
         "--nproc_per_node", str(args.gpus),
-        '--rdzv-endpoint', str(find_free_port()),
+        '--rdzv-endpoint', f'0.0.0.0:{port}',
         *args.args
     ]
 
