@@ -25,17 +25,21 @@ def main():
     parser = argparse.ArgumentParser(
         description='Automatically call torchrun with given number of gpus')
     parser.add_argument('gpus', type=int)
+    parser.add_argument('--port', type=int)
     parser.add_argument('args', nargs=argparse.REMAINDER)
     args = parser.parse_args()
 
     gpus = GPUtil.getAvailable(
-        limit=args.gpus,
+        limit=100,  # args.gpus,
         maxLoad=0.05,
         maxMemory=0.05,
     )
 
-    if len(gpus) != args.gpus:
+    if len(gpus) < args.gpus:
         raise Exception(f"Not enough spare gpus available: {args.gpus} required, {gpus} found.")
+
+    # choose the largest numbering gpu
+    gpus = sorted(gpus, reverse=True)[:args.gpus]
 
     logger.warning(f"gpus: {gpus}")
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(map(str, gpus))
