@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import sys
+import ast
+import pandas as pd
+
+data = []
+for line in sys.stdin:
+    line = line.strip()
+    if len(line) == 0:
+        continue
+
+    if '.' in line:
+        x = float(line)
+    else:
+        x = int(line)
+
+    data.append(x)
+
+s = pd.Series(data)
+
+print(s.describe())
+
