@@ -1,0 +1,384 @@
+#!/usr/bin/env python3
+
+
+import asciichartpy
+from colored import fg
+import bisect
+import click
+import sys
+import code
+
+import threading
+import re
+import copy
+import numpy as np
+import time
+import os
+
+import threading
+
+
+# ref: https://medium.com/@aliasav/how-follow-a-file-in-python-tail-f-in-python-bca026a901cf
+def follow(thefile):
+    """generator function that yields new lines in a file"""
+    # seek the end of the file
+    thefile.seek(0, os.SEEK_END)
+
+    # start infinite loop
+    while True:
+        # read last line of file
+        line = thefile.readline()
+        # sleep if file hasn't been updated
+        if not line:
+            time.sleep(0.1)
+            continue
+
+        yield line
+
+
+def ensure_list(xs):
+    """Ensure xs is a list of float
+    :param xs: list or numpy array
+    """
+    if isinstance(xs, np.ndarray):
+        xs = xs.tolist()
+    elif isinstance(xs, list):
+        xs = [float(x) for x in xs]
+    else:
+        raise ValueError(f"xs should be list or numpy array, got {type(xs)}")
+    return xs
+
+
+def shell_plot_curve(series, title="Plot", xlabel="X", ylabel_width=10, ylim=None):
+    """
+    :param series: a dict map from name to (xs, ys)
+    """
+
+    xys = series
+
+    # convert to list (should not be numpy array)
+    xys = {name: (ensure_list(xs), ensure_list(ys)) for name, (xs, ys) in xys.items()}
+
+    x_max = float("-inf")
+    x_min = float("inf")
+    for name, (xs, ys) in xys.items():
+        x_max = max(x_max, max(xs))
+        x_min = min(x_min, min(xs))
+
+    width = 70
+    unit = (x_max - x_min) / (width - 1)
+
+    def scale_series(xs, ys, width, unit):
+        rst = []
+        for i in range(width):
+            v = x_min + i * unit
+            if v < xs[0]:
+                rst.append(float("nan"))
+            else:
+                idx = bisect.bisect_left(xs, v)
+                idx = min(idx, len(ys) - 1)
+                rst.append(ys[idx])
+            if v >= xs[-1]:
+                break
+        return rst
+
+    data_dict = {
+        name: scale_series(xs, ys, width, unit) for name, (xs, ys) in xys.items()
+    }
+
+    names, plot_data = zip(*sorted(data_dict.items()))
+
+    # plot title
+    half_padding = int(max(0, int(width - len(title) / 2)) // 2)
+    print(" " * (ylabel_width + half_padding) + title + " " * half_padding)
+
+    # plot curve
+    from colored import fg
+
+    colors = [
+        fg("green"),
+        fg("blue"),
+        fg("red"),
+        fg("pink_1"),
+        fg("magenta"),
+        fg("cyan"),
+        fg("steel_blue"),
+    ]
+    fmt = "{:>" + str(ylabel_width) + ".3g}"
+    cfg = {"height": 20, "colors": colors, "format": fmt}
+    if ylim is not None:
+        cfg.update(min=ylim[0], max=ylim[1])
+    print(asciichartpy.plot(plot_data, cfg=cfg))
+
+    # plot xaxis
+    x_max_str = f"{x_max:.1f}"
+    x_min_str = f"{x_min:.1f}"
+    print(
+        " " * (ylabel_width + 1 - len(x_min_str) // 2)
+        + x_min_str
+        + " " * (width - len(x_max_str) - len(x_min_str) // 2 + 1)
+        + x_max_str
+    )
+
+    # plot x axis name
+    left_margin = 2
+    half_padding = int(max(0, int(width - left_margin - len(xlabel)) // 2))
+    print(
+        " " * (ylabel_width + left_margin + half_padding) + xlabel + " " * half_padding
+    )
+
+    # plot legend
+    from colored import attr
+
+    for idx, name in enumerate(names):
+        color = colors[idx % len(colors)]
+        print(" " * (ylabel_width + 15) + color + f"─ {name}" + attr("reset"))
+
+
+def test_shell_plot_curve():
+    import numpy as np
+
+    xs_sin = np.linspace(10, 20, 100)
+    xs_cos = np.linspace(15, 25, 15)
+    series = {
+        "sin": (xs_sin, np.sin(xs_sin) / 10**7),
+        "cos": (xs_cos, (np.cos(xs_cos) + 0.5) / 10**7),
+        "cos2": (xs_cos - 3, (np.cos(xs_cos) - 0.5) / 10**7),
+    }
+    # print(series)
+    shell_plot_curve(series, xlabel="X")
+
+
+def add_line_dict(d: dict, line: str) -> dict:
+    items = line.split()
+    data = {}
+    for idx, item in enumerate(items):
+        if "=" in item:
+            key, value = item.split("=")
+            value = float(value)
+        else:
+            key = f"{idx}"
+            value = float(item)
+        data[key] = value
+
+    if d is None or len(d) == 0:
+        d = {}
+        for k, v in data.items():
+            d[k] = [v]
+    else:
+        # concat
+        keys = set(d.keys())
+
+        assert keys == set(data.keys()), (keys, data.keys())
+        for k, v in data.items():
+            d[k].append(v)
+
+    return d
+
+
+def test_add_line_dict():
+    d = {}
+    d = add_line_dict(d, "1 2 3")
+    d = add_line_dict(d, "4 5 6")
+    d = add_line_dict(d, "7 8 9")
+    assert len(d) == 3
+    assert d["0"] == [1, 4, 7]
+    assert d["1"] == [2, 5, 8]
+    assert d["2"] == [3, 6, 9]
+
+    d = {}
+    d = add_line_dict(d, "a=1 b=2 c=3")
+    d = add_line_dict(d, "a=4 b=5 c=6")
+    d = add_line_dict(d, "a=7 b=8 c=9")
+
+    assert len(d) == 3
+    assert np.allclose(d["a"], [1, 4, 7])
+    assert np.allclose(d["b"], [2, 5, 8])
+    assert np.allclose(d["c"], [3, 6, 9])
+
+
+def test_add_line_dict_efficiency():
+    import time
+    from tqdm import tqdm
+
+    d = {}
+    start = time.time()
+    for i in tqdm(range(100000)):
+        d = add_line_dict(d, "1 2 3")
+    print(time.time() - start)
+    assert len(d) == 3
+    assert d["0"] == [1] * 100000
+    assert d["1"] == [2] * 100000
+    assert d["2"] == [3] * 100000
+
+
+@click.command()
+@click.option("--input-file", default="-", help="Input file. Defaults to `-` for stdin")
+@click.option("--title", default="Plot")
+@click.option("--xlabel", default="X")
+@click.option("--xname", default="X")
+@click.option(
+    "--column",
+    "-c",
+    multiple=True,
+    help=("Regular expression for column names. " "Can be specified multiple times."),
+)
+@click.option("--info", is_flag=True)
+@click.option(
+    "--interactive",
+    "-i",
+    help=(
+        "Interactively plot graphs to prevent from parsing input from scratch for every graph"
+    ),
+    is_flag=True,
+)
+@click.option(
+    "--is-train-log",
+    "-t",
+    is_flag=True,
+    help=("Parse train log of posedata training in jax"),
+)
+def main(input_file, title, xlabel, xname, info, column, interactive, is_train_log):
+    series = {}
+
+    if input_file == "-":
+        f = sys.stdin
+    else:
+        f = open(input_file)
+
+    if not is_train_log:
+        preprocess_line = lambda line: line
+    else:
+
+        def preprocess_line(line):
+            """
+            :return: None if line should be ignored
+            """
+            # HACK for posedata training
+            if "train/loss=" not in line:
+                return None
+            if " step=0 " in line:
+                return None
+            pos = line.find("step=")
+            if pos == -1:
+                return None
+            line = line[pos:]
+            return line
+
+    for line in f:
+        line = preprocess_line(line)
+        if line is None:
+            continue
+        series = add_line_dict(series, line)
+
+    def fill_thread():
+        nonlocal series
+        for line in follow(f):
+            line = preprocess_line(line)
+            if line is None:
+                continue
+            series = add_line_dict(series, line)
+
+    if interactive:
+        t = threading.Thread(target=fill_thread)
+        t.start()
+    else:
+        f.close()
+
+    def postprocess_series(series):
+        nonlocal xname, xlabel  # HACK
+        if len(series) == 1:
+            series = {k: (np.arange(len(ys)), ys) for k, ys in series.items()}
+        elif xname is None:
+            xname = next(iter(series.keys()))
+            n = len(next(iter(series.values())))
+            xs = np.arange(n)
+            series = {k: (xs, ys) for k, ys in series.items()}
+        else:
+            assert xname is not None, xname
+            if xlabel is None:
+                xlabel = xname
+            if xlabel is None:
+                xlabel = "X"
+            xs = series[xname]
+            series = {k: (xs, ys) for k, ys in series.items() if k != xname}
+        return series
+
+    def filter_series_by_column(series, column):
+        if not column:
+            return series
+
+        def match(name):
+            for r in column:
+                if re.match(r, name):
+                    return True
+
+            return False
+
+        return {k: v for k, v in series.items() if match(k)}
+
+    def set_xlim(s, xlim):
+        if xlim is None:
+            return s
+        xmin, xmax = xlim
+        s_new = {}
+        for k, (xs, ys) in s.items():
+            xs_new, ys_new = [], []
+            for x, y in zip(xs, ys):
+                if x >= xmin and x <= xmax:
+                    xs_new.append(x)
+                    ys_new.append(y)
+            s_new[k] = (xs_new, ys_new)
+
+        return s_new
+
+    def do_plot(column, xlim=None, ylim=None):
+        if isinstance(column, str):
+            column = (".*" + column,)
+
+        s = postprocess_series(series)
+
+        s = filter_series_by_column(s, column)
+
+        s = set_xlim(s, xlim)
+
+        if len(s) == 0:
+            print(f"No series match {column}")
+        else:
+            if info:
+                print(f"columns: {list(s.keys())}")
+            else:
+                shell_plot_curve(s, title=title, xlabel=xlabel, ylim=ylim)
+
+    if interactive:
+
+        import datetime
+
+        while len(series) == 0:
+            # print date and wating for data
+            print(f"{datetime.datetime.now()}: waiting for data")
+            time.sleep(1)
+
+        do_plot(column)
+
+        p = do_plot
+        print("Interactive mode. Use p('regex') to plot a new figure")
+        try:
+            from IPython import embed
+
+            embed()
+        finally:
+            t.join()
+            # TODO: kill the thread
+
+        # code.interact(local=locals())
+    else:
+        do_plot(column)
+
+    if f is not sys.stdin:
+        f.close()
+
+
+if __name__ == "__main__":
+    main()
+
