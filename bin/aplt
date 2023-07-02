@@ -49,10 +49,14 @@ def ensure_list(xs):
     return xs
 
 
-def shell_plot_curve(series, title="Plot", xlabel="X", ylabel_width=10, ylim=None):
+def shell_plot_curve(series, title="Plot", xlabel="X", ylabel_width=10, ylim=None,
+                     scale_strategy='nearest'):
     """
     :param series: a dict map from name to (xs, ys)
+    :param scale_strategy: 'nearest' or 'average'
     """
+
+    assert scale_strategy in ['nearest', 'average'], scale_strategy
 
     xys = series
 
@@ -70,6 +74,7 @@ def shell_plot_curve(series, title="Plot", xlabel="X", ylabel_width=10, ylim=Non
 
     def scale_series(xs, ys, width, unit):
         rst = []
+        last_idx = 0
         for i in range(width):
             v = x_min + i * unit
             if v < xs[0]:
@@ -77,13 +82,21 @@ def shell_plot_curve(series, title="Plot", xlabel="X", ylabel_width=10, ylim=Non
             else:
                 idx = bisect.bisect_left(xs, v)
                 idx = min(idx, len(ys) - 1)
-                rst.append(ys[idx])
+
+                if scale_strategy == 'nearest':
+                    rst.append(ys[idx])
+                else:
+                    assert scale_strategy == 'average', scale_strategy
+                    rst.append(np.mean(ys[last_idx:idx+1]))
+                last_idx = idx
+
             if v >= xs[-1]:
                 break
         return rst
 
     data_dict = {
-        name: scale_series(xs, ys, width, unit) for name, (xs, ys) in xys.items()
+        name: scale_series(xs, ys, width, unit) 
+        for name, (xs, ys) in xys.items()
     }
 
     names, plot_data = zip(*sorted(data_dict.items()))
@@ -215,8 +228,8 @@ def test_add_line_dict_efficiency():
 @click.command()
 @click.option("--input-file", default="-", help="Input file. Defaults to `-` for stdin")
 @click.option("--title", default="Plot")
-@click.option("--xlabel", default="X")
-@click.option("--xname", default="X")
+@click.option("--xlabel", default=None, type=str)
+@click.option("--xname", default=None, type=str)
 @click.option(
     "--column",
     "-c",
@@ -233,12 +246,13 @@ def test_add_line_dict_efficiency():
     is_flag=True,
 )
 @click.option(
-    "--is-train-log",
-    "-t",
-    is_flag=True,
-    help=("Parse train log of posedata training in jax"),
+    "--scale-strategy",
+    "-s",
+    type=click.Choice(['nearest', 'average']),
+    default='nearest',
+    help=("How to scale the series to fit the screen"),
 )
-def main(input_file, title, xlabel, xname, info, column, interactive, is_train_log):
+def main(input_file, title, xlabel, xname, info, column, interactive, scale_strategy):
     series = {}
 
     if input_file == "-":
@@ -246,24 +260,8 @@ def main(input_file, title, xlabel, xname, info, column, interactive, is_train_l
     else:
         f = open(input_file)
 
-    if not is_train_log:
-        preprocess_line = lambda line: line
-    else:
-
-        def preprocess_line(line):
-            """
-            :return: None if line should be ignored
-            """
-            # HACK for posedata training
-            if "train/loss=" not in line:
-                return None
-            if " step=0 " in line:
-                return None
-            pos = line.find("step=")
-            if pos == -1:
-                return None
-            line = line[pos:]
-            return line
+    # TODO: support custom preprocess line
+    preprocess_line = lambda line: line
 
     for line in f:
         line = preprocess_line(line)
@@ -287,21 +285,41 @@ def main(input_file, title, xlabel, xname, info, column, interactive, is_train_l
 
     def postprocess_series(series):
         nonlocal xname, xlabel  # HACK
+        # from IPython import embed; embed()
         if len(series) == 1:
+            # only one series, use index as x
             series = {k: (np.arange(len(ys)), ys) for k, ys in series.items()}
-        elif xname is None:
-            xname = next(iter(series.keys()))
-            n = len(next(iter(series.values())))
-            xs = np.arange(n)
-            series = {k: (xs, ys) for k, ys in series.items()}
-        else:
-            assert xname is not None, xname
-            if xlabel is None:
-                xlabel = xname
             if xlabel is None:
                 xlabel = "X"
-            xs = series[xname]
-            series = {k: (xs, ys) for k, ys in series.items() if k != xname}
+            if xname is None:
+                xname = "0"
+        else:
+            if xname is None:
+                if xname is None:
+                    if 'step' in series:
+                        # common case: auto infer xname
+                        xname = 'step'
+                else:
+                    xname = next(iter(series.keys()))
+
+            # If still cannot auto infer xname
+            if xname is None: 
+                xname = "X"
+                if xlabel is None:
+                    xlabel = xname
+
+                n = len(next(iter(series.values())))
+                xs = np.arange(n)
+                series = {k: (xs, ys) for k, ys in series.items()}
+                
+            else:
+                assert xname is not None, xname
+                if xlabel is None:
+                    xlabel = xname
+                if xlabel is None:
+                    xlabel = "X"
+                xs = series[xname]
+                series = {k: (xs, ys) for k, ys in series.items() if k != xname}
         return series
 
     def filter_series_by_column(series, column):
@@ -348,7 +366,7 @@ def main(input_file, title, xlabel, xname, info, column, interactive, is_train_l
             if info:
                 print(f"columns: {list(s.keys())}")
             else:
-                shell_plot_curve(s, title=title, xlabel=xlabel, ylim=ylim)
+                shell_plot_curve(s, title=title, xlabel=xlabel, ylim=ylim, scale_strategy=scale_strategy)
 
     if interactive:
 
