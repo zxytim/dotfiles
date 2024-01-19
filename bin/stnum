@@ -20,4 +20,5 @@ for line in sys.stdin:
 s = pd.Series(data)
 
 print(s.describe())
+print("Sum: ", sum(data))
 
