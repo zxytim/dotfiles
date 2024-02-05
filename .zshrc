@@ -35,8 +35,12 @@ antigen bundle autojump
 [[ $OS_DISTRIBUTION == 'ubuntu' ]] && source /usr/share/autojump/autojump.sh
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh  # macos
 
-antigen theme zxytim/dotfiles .zsh/themes/tim
-# antigen theme romkatv/powerlevel10k
+
+if [[ $OS_DISTRIBUTION == "osx" ]]; then
+    antigen theme romkatv/powerlevel10k
+else
+    antigen theme zxytim/dotfiles .zsh/themes/tim
+fi
 
 antigen apply
 # }
@@ -96,7 +100,7 @@ alias iotop='sudo iotop'
 alias noitermplot='MPLBACKEND=""'
 
 
-if cat /etc/os-release | grep "^ID=" | grep manjaro >/dev/null; then
+if [[ -e /etc/os-release ]] && cat /etc/os-release | grep "^ID=" | grep manjaro >/dev/null ]]; then
     alias yS='yay -S'
     alias ySs='yay -Ss'
 fi
@@ -257,20 +261,7 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/root/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/root/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/root/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/root/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
+# Volcengine
 [ -r ~/.volc/.profile ] && source ~/.volc/.profile #[volc installer]
-[[ -o interactive ]] && source $HOME/.expman/expman.zsh
+
+[[ -e $HOME/.expman/expman.zsh && -o interactive ]] && source $HOME/.expman/expman.zsh

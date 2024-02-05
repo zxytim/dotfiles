@@ -14,7 +14,29 @@ git checkout master
 echo '*' >> ~/.git/info/exclude
 ```
 
-## Supersede vim with nvim
+## MacOS
+Install [Meslo Nerd Font patched for Powerlevel10k](https://github.com/romkatv/powerlevel10k?tab=readme-ov-file#meslo-nerd-font-patched-for-powerlevel10k)
+
+Install homebrew
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+
+Install packages
+```
+brew install tmux neovim autojump tig htop cmake python
+python3 -m pip intall -U pip
+python3 -m pip install asciichartpy colored click numpy pynvim
+```
+
+Compile [YCM](https://github.com/ycm-core/YouCompleteMe)
+```
+~/.vim/plugged/YouCompleteMe
+```
+
+# Deprecated (Sections below are not been maintained anymore)
+## (Ubuntu) Supersede vim with nvim
 ```
 sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
 sudo update-alternatives --config vim
