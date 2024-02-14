@@ -26,8 +26,13 @@ Install homebrew
 Install packages
 ```
 brew install tmux neovim autojump tig htop cmake python
-python3 -m pip intall -U pip
+python3 -m pip install -U pip
 python3 -m pip install asciichartpy colored click numpy pynvim
+```
+
+Install vim-plug plugins
+```
+nvim +PlugInstall
 ```
 
 Compile [YCM](https://github.com/ycm-core/YouCompleteMe)
