@@ -65,6 +65,13 @@ TODO
 pip install --user neovim jedi
 ```
 
+# Install tmux plugin manager
+- https://github.com/tmux-plugins/tpm
+```
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+Press `prefix` + `I` (capital i, as in Install) to fetch the plugin.
+
 
 
 # How to Add Files
