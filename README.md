@@ -55,8 +55,7 @@ sudo update-alternatives --config editor
 ```
 sudo apt update
 sudo apt install -y python-dev python3-dev python-pip python3-pip jq silversearcher-ag tig
-pip3 install --user neovim jedi
-pip install --user neovim jedi
+python3 -m pip install --user --upgrade pynvim
 ```
 
 ### Arch Linux
