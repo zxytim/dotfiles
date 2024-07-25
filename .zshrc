@@ -100,7 +100,7 @@ alias iotop='sudo iotop'
 alias noitermplot='MPLBACKEND=""'
 
 
-if [[ -e /etc/os-release ]] && cat /etc/os-release | grep "^ID=" | grep manjaro >/dev/null ]]; then
+if [[ -e /etc/os-release ]] && cat /etc/os-release | grep "^ID=" | grep manjaro >/dev/null; then
     alias yS='yay -S'
     alias ySs='yay -Ss'
 fi
@@ -264,4 +264,4 @@ fi
 # Volcengine
 [ -r ~/.volc/.profile ] && source ~/.volc/.profile #[volc installer]
 
-[[ -e $HOME/.expman/expman.zsh && -o interactive ]] && source $HOME/.expman/expman.zsh
+# [[ -e $HOME/.expman/expman.zsh && -o interactive ]] && source $HOME/.expman/expman.zsh
