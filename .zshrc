@@ -227,10 +227,6 @@ alias nohist=' nohist'
 # peotry dependency manager for python
 export PATH="$HOME/.poetry/bin:$PATH"
 
-# execute ~/.zsh_local at the end
-safe_source ~/.zsh_local
-
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 
@@ -268,3 +264,8 @@ fi
 [ -r ~/.volc/.profile ] && source ~/.volc/.profile #[volc installer]
 
 # [[ -e $HOME/.expman/expman.zsh && -o interactive ]] && source $HOME/.expman/expman.zsh
+
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+# execute ~/.zsh_local at the end
+safe_source ~/.zsh_local
