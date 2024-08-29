@@ -41,7 +41,17 @@ Compile [YCM](https://github.com/ycm-core/YouCompleteMe)
 ```
 
 # Deprecated (Sections below are not been maintained anymore)
-## (Ubuntu) Supersede vim with nvim
+## Install OS-specific dependencies
+
+### Ubuntu
+```
+sudo apt update
+sudo apt install -y python-dev python3-dev python-pip python3-pip jq silversearcher-ag tig autojump zsh
+python3 -m pip install --user --upgrade pynvim
+```
+
+(Ubuntu) Supersede vim with nvim
+
 ```
 sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
 sudo update-alternatives --config vim
@@ -49,14 +59,6 @@ sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
 sudo update-alternatives --config editor
 ```
 
-## Install OS-specific dependencies
-
-### Ubuntu
-```
-sudo apt update
-sudo apt install -y python-dev python3-dev python-pip python3-pip jq silversearcher-ag tig
-python3 -m pip install --user --upgrade pynvim
-```
 
 ### Arch Linux
 ```
