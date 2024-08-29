@@ -15,6 +15,9 @@ fpath+=~/.zfunc
 # some utilities
 source $HOME/.zsh/utils.zsh
 
+# pre antigen
+safe_source $HOME/.zsh/pre_antigen.zsh
+
 # antigen plugins {
 source $HOME/.zsh/antigen.zsh
 antigen use oh-my-zsh
