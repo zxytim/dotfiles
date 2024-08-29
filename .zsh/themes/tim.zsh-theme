@@ -6,8 +6,15 @@ local return_code="%(?..%{$fg[red]%}%?)%{$reset_color%}"
 
 
 # We've removed "$(git_super_status)" after the first "%{$reset_color%}", since it is too slow.
+#
+if typeset -f get_worker_site > /dev/null; then
+    site="-$(get_worker_site)"
+else
+    site=""
+fi
+
 PREFIX=''
-PROMPT=$'$PREFIX%{\033[33m%}%D{%F %H:%M:%S}%{$reset_color%} $(git_super_status) %{\033[32m%}%n@%m%{$fg[blue]%} %c%{$reset_color%} %!%{$reset_color%} \
+PROMPT=$'$PREFIX%{\033[33m%}%D{%F %H:%M:%S}%{$reset_color%} $(git_super_status) %{\033[32m%}%n@%m${site}%{$fg[blue]%} %c%{$reset_color%} %!%{$reset_color%} \
 $ '
 
 
