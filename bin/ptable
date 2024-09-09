@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+# Pretty table using rich
+
+from rich.console import Console
+from rich.table import Table
+import pandas as pd
+
+import sys
+
+
+def main():
+    console = Console()
+
+    if len(sys.argv) == 2:
+        df = pd.read_csv(sys.argv[1])
+    elif len(sys.argv) == 1:
+        df = pd.read_csv(sys.stdin)
+    else:
+        print("Usage: `ptable <file.csv>` or`cat <file.csv> | ptable`")
+        print("Pretty print csv table")
+        sys.exit(1)
+
+    table = Table(show_header=True, header_style="bold magenta")
+    for col in df.columns:
+        table.add_column(col)
+
+    for row in df.itertuples(index=False):
+        values = [str(value) for value in row]
+        table.add_row(*values)
+
+    console.print(table)
+
+
+if __name__ == "__main__":
+    main()
