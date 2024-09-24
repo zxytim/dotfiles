@@ -85,6 +85,7 @@ alias p='python3'
 
 # 'pi' for `python3 -m pip install`
 alias pi='python3 -m pip install'
+alias ui='uv pip install'
 
 # http proxy
 alias set_proxy='source ~/bin/default_proxy.source'
@@ -263,7 +264,7 @@ fi
 # Volcengine
 [ -r ~/.volc/.profile ] && source ~/.volc/.profile #[volc installer]
 
-# [[ -e $HOME/.expman/expman.zsh && -o interactive ]] && source $HOME/.expman/expman.zsh
+[[ -e $HOME/.expman/expman.zsh && -o interactive ]] && source $HOME/.expman/expman.zsh
 
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 

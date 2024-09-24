@@ -27,7 +27,7 @@ Install packages
 ```
 brew install tmux neovim autojump tig htop cmake python
 python3 -m pip install -U pip
-python3 -m pip install asciichartpy colored click numpy pynvim
+python3 -m pip install asciichartpy colored click numpy pynvim uv
 ```
 
 Install vim-plug plugins
@@ -40,7 +40,6 @@ Compile [YCM](https://github.com/ycm-core/YouCompleteMe)
 ~/.vim/plugged/YouCompleteMe
 ```
 
-# Deprecated (Sections below are not been maintained anymore)
 ## Install OS-specific dependencies
 
 ### Ubuntu
@@ -59,6 +58,11 @@ sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
 sudo update-alternatives --config editor
 ```
 
+Install fzf
+```
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+```
 
 ### Arch Linux
 ```
